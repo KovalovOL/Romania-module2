@@ -8,12 +8,12 @@ import logging
 import os
 from datetime import datetime
 
-# Настройка окружения OpenCV
+
 os.environ["OPENCV_IO_ENABLE_OPENEXR"] = "1"
 os.environ["OPENCV_IO_ENABLE_JASPER"] = "0"
 os.environ["OPENCV_LOG_LEVEL"] = "ERROR"
 
-# Настройка логирования
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -79,7 +79,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.accept()
         logger.info(f"WebSocket connection accepted with {client_ip}")
 
-        # Получаем начальные данные
+
         logger.debug("Waiting for initial data...")
         init_data = await websocket.receive_json()
         logger.info(f"Initial data received: {init_data}")
@@ -98,7 +98,7 @@ async def websocket_endpoint(websocket: WebSocket):
             frame_counter += 1
             logger.debug(f"Waiting for frame #{frame_counter}...")
             
-            # Получаем кадр
+
             frame_start = datetime.now()
             frame_data = await websocket.receive_bytes()
             receive_time = (datetime.now() - frame_start).total_seconds()
@@ -106,7 +106,7 @@ async def websocket_endpoint(websocket: WebSocket):
             logger.info("Get Frame")
 
 
-            # Декодируем кадр
+
             decode_start = datetime.now()
             frame = cv2.imdecode(np.frombuffer(frame_data, np.uint8), cv2.IMREAD_COLOR)
             decode_time = (datetime.now() - decode_start).total_seconds()
@@ -117,13 +117,12 @@ async def websocket_endpoint(websocket: WebSocket):
                 
             logger.debug(f"Frame #{frame_counter} decoded in {decode_time:.3f}s, shape: {frame.shape}")
 
-            # Детекция эмоций
+
             detect_start = datetime.now()
             emotions_data = await detector_pool.detect(frame)
             detect_time = (datetime.now() - detect_start).total_seconds()
             logger.debug(f"Frame #{frame_counter} processed in {detect_time:.3f}s. Results: {len(emotions_data)} faces detected")
 
-            # Проверка результатов
             detected = False
             for i, face in enumerate(emotions_data):
                 logger.info("In FOR")
@@ -137,7 +136,6 @@ async def websocket_endpoint(websocket: WebSocket):
                     logger.info(f"Target emotion detected on face #{i+1} with confidence {current_confidence:.2f}")
                     break
 
-            # Отправка результата
             if detected:
                 response = {
                     "status": "detected",
