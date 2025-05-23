@@ -115,14 +115,12 @@
         const confidenceInput = document.getElementById('confidenceInput');
         const confidenceValue = document.getElementById('confidenceValue');
 
-        // Инициализация элементов управления
         confidenceInput.addEventListener('input', updateConfidenceValue);
         
         function updateConfidenceValue() {
             confidenceValue.textContent = confidenceInput.value;
         }
 
-        // Инициализация камеры
         async function initCamera() {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ 
@@ -135,7 +133,6 @@
             }
         }
 
-        // Управление детекцией
         async function toggleDetection() {
             if (isDetecting) {
                 stopDetection();
@@ -144,7 +141,6 @@
             }
         }
 
-        // Запуск детекции
         async function startDetection() {
             const emotion = emotionSelect.value;
             if (!emotion) {
@@ -156,13 +152,11 @@
             toggleBtn.textContent = 'Stop Detection';
             statusDiv.textContent = 'Status: Connecting...';
 
-            // Формируем параметры
             const params = { 
                 emotion: emotion,
                 confidence: parseFloat(confidenceInput.value)
             };
 
-            // Убираем confidence если значение по умолчанию
             if (params.confidence === 0.1) {
                 delete params.confidence;
             }
@@ -198,7 +192,6 @@
             };
         }
 
-        // Остановка детекции
         function stopDetection() {
             isDetecting = false;
             toggleBtn.textContent = 'Start Detection';
@@ -210,7 +203,6 @@
             }
         }
 
-        // Отправка кадров
         function sendFrames() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -223,7 +215,6 @@
                 canvas.height = video.videoHeight;
                 ctx.drawImage(video, 0, 0);
 
-                // Оптимизация: отправляем каждый 3-й кадр (~10 FPS)
                 if (frameCounter++ % 3 === 0) {
                     canvas.toBlob(blob => {
                         if (blob) {
@@ -247,13 +238,11 @@
             sendFrame();
         }
 
-        // Показать результат
         function showDetectionResult(result) {
             const message = `Detected ${result.emotion} with ${Math.round(result.confidence * 100)}% confidence!`;
             alert(message);
         }
 
-        // Инициализация при загрузке
         window.onload = initCamera;
     </script>
 </body>
