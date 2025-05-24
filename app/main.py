@@ -102,7 +102,7 @@ async def websocket_endpoint(websocket: WebSocket):
             frame_start = datetime.now()
             frame_data = await websocket.receive_bytes()
             receive_time = (datetime.now() - frame_start).total_seconds()
-            logger.debug(f"Frame #{frame_counter} received in {receive_time:.3f}s, size: {len(frame_data)} bytes")
+            logger.debug(f"Frame #{frame_counter} received in {receive_time:.3f}, size: {len(frame_data)} bytes")
             logger.info("Get Frame")
 
 
